@@ -8,12 +8,15 @@ namespace CCIPICL_ChatAssistant.Controllers
     public class ChatController : ControllerBase
     {
         [HttpPost]
-        public ActionResult<ChatMessage> Post([FromBody] ChatMessage message)
+        public ActionResult<ChatResponse> Post([FromBody] ChatRequest request)
         {
-            // Here I will do the GPT model API call and get a response than send it back to the website
-             // For now I am gonna return a test reponse for making sure I set up the API correctly
-            message.BotResponse = "You said: " + message.UserMessage;
-            return message;
+            var response = new ChatResponse
+            {
+                SessionId = request.SessionId,
+                BotResponse = "You said: " + request.UserMessage // Replace with actual GPT model response
+            };
+
+            return Ok(response);
         }
     }
 }
