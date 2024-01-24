@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>CCIPICL_ChatAssistant</RootNamespace>
+    <UserSecretsId>6ab2b0fe-de1b-4a27-901f-8d645bc8fbfc</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
