@@ -53,8 +53,6 @@ namespace CCIPICL_ChatAssistant.Models
         public string RequestId { get; set; } // Unique identifier for the request
         public string UserContext { get; set; } // Information about the user or session, if applicable
 
-        // If the metadata can contain arbitrary key-value pairs,
-        // you might consider using a dictionary:
         public Dictionary<string, string> AdditionalInfo { get; set; } = new Dictionary<string, string>();
     }
 
@@ -63,24 +61,42 @@ namespace CCIPICL_ChatAssistant.Models
         public int TokenCount { get; set; } // Number of tokens processed in the request
         public double ComputeTime { get; set; } // Compute time in seconds, if available
         public int APIRequestsCount { get; set; } // Number of API requests made, if tracked
-
-        // You can expand this class with more properties as you identify them
-        // in the API's responses or documentation.
     }
 
+
+    public class ListMessagesResponse
+    {
+        public string Object { get; set; }
+        public List<Message> Data { get; set; } = new List<Message> { };
+        public string FirstId { get; set; }
+        public string LastId { get; set; }
+        public bool HasMore { get; set; }
+    }
 
     public class Message
     {
         public string Id { get; set; }
         public string Object { get; set; }
-        public string Role { get; set; }
-        public Content Content { get; set; }
         public long CreatedAt { get; set; }
+        public string ThreadId { get; set; }
+        public string Role { get; set; }
+        public List<Content> Content { get; set; } = new List<Content> { };
+        public List<string> FileIds { get; set; } = new List<string> { };
+        public string AssistantId { get; set; }
+        public string RunId { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
     }
 
     public class Content
     {
-        public string Text { get; set; }
+        public string Type { get; set; }
+        public Text Text { get; set; }
+    }
+
+    public class Text
+    {
+        public string Value { get; set; }
+        public List<object> Annotations { get; set; } = new List<object> { };
     }
 }
 

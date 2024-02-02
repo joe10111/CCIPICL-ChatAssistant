@@ -51,7 +51,7 @@ namespace CCIPICL_ChatAssistant.Controllers
                 var lastMessage = await FetchLastThreadMessage(httpClient, threadId);
 
                 // Directly accessing the Content of the Message object
-                var assistantResponse = lastMessage?.Content?.Text ?? "No response was provided by the assistant.";
+                var assistantResponse = lastMessage?.Content?.FirstOrDefault()?.Text?.Value ?? "No response was provided by the assistant.";
 
 
                 // Prepare and return the response
@@ -68,9 +68,6 @@ namespace CCIPICL_ChatAssistant.Controllers
                 return StatusCode(500, $"Error processing request: {ex.Message}");
             }
         }
-
-
-
 
         private async Task<string> CreateThread(HttpClient httpClient)
         {
@@ -161,8 +158,8 @@ namespace CCIPICL_ChatAssistant.Controllers
 
 
                 // Extract the response text from the message
-                var assistantResponse = lastMessage?.Content?.Text ?? "No response was provided by the assistant.";
-               
+                var assistantResponse = lastMessage?.Content?.FirstOrDefault()?.Text?.Value ?? "No response was provided by the assistant.";
+
 
                 return assistantResponse;
             }
@@ -174,7 +171,7 @@ namespace CCIPICL_ChatAssistant.Controllers
 
         private async Task<Message> FetchLastThreadMessage(HttpClient httpClient, string threadId)
         {
-            string requestUrl = $"https://api.openai.com/v1/threads/{threadId}/messages?limit=1&order=desc";
+            string requestUrl = $"https://api.openai.com/v1/threads/{threadId}/messages?limit=20&order=desc";
 
             var response = await httpClient.GetAsync(requestUrl);
             if (!response.IsSuccessStatusCode)
@@ -183,10 +180,13 @@ namespace CCIPICL_ChatAssistant.Controllers
             }
 
             var responseContent = await response.Content.ReadAsStringAsync();
-            var messagesResponse = JsonConvert.DeserializeObject<ThreadMessagesResponse>(responseContent);
+            var messagesResponse = JsonConvert.DeserializeObject<ListMessagesResponse>(responseContent);
 
             // Assuming the response correctly maps to the expected JSON structure
-            return messagesResponse.Messages.FirstOrDefault();
+            // Filter for the latest message where the role is 'assistant'
+            var assistantMessage = messagesResponse.Data.FirstOrDefault(m => m.Role == "assistant");
+
+            return assistantMessage; // This can be null if no assistant message is found
         }
     }
 }
