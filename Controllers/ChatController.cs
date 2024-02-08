@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 
 namespace CCIPICL_ChatAssistant.Controllers
 {
+    // test
     [Route("api/[controller]")]
     [ApiController]
     public class ChatController : ControllerBase
