@@ -22,13 +22,13 @@ namespace CCIPICL_ChatAssistant.Controllers
         {
             _configuration = configuration;
             _httpClientFactory = httpClientFactory;
-            _assistantId = _configuration["OpenAIAssistantId"];
+            _assistantId = Environment.GetEnvironmentVariable("OpenAIAssistantId");
         }
 
         private HttpClient GetConfiguredHttpClient()
         {
             var httpClient = _httpClientFactory.CreateClient();
-            string apiKey = _configuration["OpenAIAPIKey"];
+            string apiKey = Environment.GetEnvironmentVariable("OpenAIAPIKey");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
             httpClient.DefaultRequestHeaders.Add("OpenAI-Beta", "assistants=v1");
             return httpClient;
